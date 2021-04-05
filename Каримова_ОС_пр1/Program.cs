@@ -1,11 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Linq;
 using System.IO.Compression;
+using System.Text.Json;
+using System.Xml.Linq;
 
 namespace Каримова_ОС_пр1
 {
@@ -35,7 +32,7 @@ namespace Каримова_ОС_пр1
 
     static void file()
     {
-      string path = @"C:\Users\angel\Downloads\Каримова Ангелина БББО-05-19\Каримова Ангелина БББО-05-19";
+      string path = @"D:\Documents\Каримова Ангелина БББО-05-19\ОС_Практика1";
       DirectoryInfo dirInfo = new DirectoryInfo(path);
       if (!dirInfo.Exists)
       {
@@ -46,7 +43,7 @@ namespace Каримова_ОС_пр1
       string str;
       str = Console.ReadLine();
 
-      string pathfile = @"C:\Users\angel\Downloads\Каримова Ангелина БББО-05-19\Каримова Ангелина БББО-05-19\note.txt";
+      string pathfile = @"D:\Documents\Каримова Ангелина БББО-05-19\ОС_Практика1\note.txt";
       using (FileStream fstream = new FileStream(pathfile, FileMode.OpenOrCreate))
       {
         byte[] array = System.Text.Encoding.Default.GetBytes(str);
@@ -75,30 +72,32 @@ namespace Каримова_ОС_пр1
       }
     }
 
-    static async Task Json1()
+    static void Json()
     {
-      string pathjson = @"C:\Users\angel\Downloads\Каримова Ангелина БББО-05-19\Каримова Ангелина БББО-05-19\file.json";
+      string pathjson = @"D:\Documents\Каримова Ангелина БББО-05-19\ОС_Практика1\file.json";
+      // Сериализация объекта класса Person (Tom, 35)
       using (FileStream fs = new FileStream(pathjson, FileMode.OpenOrCreate))
       {
         Person tom = new Person() { Name = "Tom", Age = 35 };
-        await JsonSerializer.SerializeAsync<Person>(fs, tom);
-       
+         JsonSerializer.SerializeAsync<Person>(fs, tom);
       }
+      // Десериализация
       string jsonString = File.ReadAllText(pathjson);
       Person restoredPerson = JsonSerializer.Deserialize<Person>(jsonString);
-
+      // Вывод данных из файла
       Console.WriteLine("Информация из файла json: ");
       Console.WriteLine($"Имя: {restoredPerson.Name}  Возраст: {restoredPerson.Age}");
       Console.WriteLine("Вы хотите удалить файл json? Нажмите 1 - да, 0 - нет");
       if (Console.ReadLine() == "1")
       {
-        File.Delete(pathjson);
+        File.Delete(pathjson); // Удаление файла json
         Console.WriteLine("Файл удалён");
       }
       else { Console.WriteLine("Файл не удалён"); }
     }
     static void xml()
     {
+      // Добавление данных в xml файл
       XDocument xdoc;
       xdoc = new XDocument();
       XElement iphone6 = new XElement("phone");
@@ -128,14 +127,15 @@ namespace Каримова_ОС_пр1
       galaxys5.Add(galaxysNameAttr);
       galaxys5.Add(galaxysCompanyElem);
       galaxys5.Add(galaxysPriceElem);
-      XElement phones = new XElement("phones");
+      XElement phones = new XElement("phones"); 
       phones.Add(iphone6);
       phones.Add(galaxys5);
       xdoc.Add(phones);
-      string pathxml = @"C:\Users\angel\Downloads\Каримова Ангелина БББО-05-19\Каримова Ангелина БББО-05-19\phones.xml";
-      xdoc.Save(pathxml);
+      string pathxml = @"D:\Documents\Каримова Ангелина БББО-05-19\ОС_Практика1\phones.xml";
+      xdoc.Save(pathxml); // Создание xml файла
 
-      Console.WriteLine("Содержимое файла xml: ");
+
+      Console.WriteLine("Содержимое файла xml: "); // Вывод содержимого файла
       foreach (XElement phoneElement in xdoc.Element("phones").Elements("phone"))
       {
         XAttribute nameAttribute = phoneElement.Attribute("name");
@@ -150,7 +150,7 @@ namespace Каримова_ОС_пр1
         }
         Console.WriteLine();
       }
-      Console.WriteLine("Вы хотите удалить файл xml? Нажмите 1 - да, 0 - нет");
+      Console.WriteLine("Вы хотите удалить файл xml? Нажмите 1 - да, 0 - нет"); // Удаление файла
       if(Console.ReadLine()=="1")
       {
         File.Delete(pathxml);
@@ -160,44 +160,64 @@ namespace Каримова_ОС_пр1
 
     static void zip()
     {
-      string startFolder = @"C:\Users\angel\Downloads\Каримова Ангелина БББО-05-19\Каримова Ангелина БББО-05-19\test";
-      string zipFile = @"C:\Users\angel\Downloads\Каримова Ангелина БББО-05-19\Каримова Ангелина БББО-05-19\test.zip";
-      string targetFolder = @"C:\Users\angel\Downloads\Каримова Ангелина БББО-05-19\Каримова Ангелина БББО-05-19\newtest";
-      string newFile = @"C:\Users\angel\Downloads\Каримова Ангелина БББО-05-19\Каримова Ангелина БББО-05-19\test\newfile.txt";
+      string arch = @"D:\Documents\Каримова Ангелина БББО-05-19\ОС_Практика1\arch.zip";
+      string file = @"D:\Documents\Каримова Ангелина БББО-05-19\ОС_Практика1\doc.doc";
+      string target = @"D:\Documents\Каримова Ангелина БББО-05-19\ОС_Практика1\doc_new.doc";
 
       Console.WriteLine("Введите строку, которую хотите записать в файл: ");
       string str;
       str = Console.ReadLine();
 
-      using (FileStream fstream = new FileStream(newFile, FileMode.OpenOrCreate))
+      using (FileStream fstream = new FileStream(file, FileMode.OpenOrCreate)) // Побайтовая запись информации в файл
       {
         byte[] array = System.Text.Encoding.Default.GetBytes(str);
         fstream.Write(array, 0, array.Length);
         Console.WriteLine("Текст записан в файл");
       }
 
-      ZipFile.CreateFromDirectory(startFolder, zipFile);
-      Console.WriteLine($"Папка {startFolder} архивирована в файл {zipFile} \n ");
-      ZipFile.ExtractToDirectory(zipFile, targetFolder);
-      Console.WriteLine($"Файл {zipFile} распакован в папку {targetFolder} \n ");
-
-      FileInfo fInfo = new FileInfo(newFile);
-      Console.WriteLine($"Название: {fInfo.Name} \n Расширение: {fInfo.Extension} \n Размер: {fInfo.Length} \n Создан: {fInfo.CreationTime} \n");
-
-      Console.WriteLine("Вы хотите удалить файл? Нажмите 1 - да, 0 - нет");
-      if(Console.ReadLine() == "1")
+      using (FileStream sourceStream = new FileStream(file, FileMode.OpenOrCreate))
       {
-        File.Delete(newFile);
-        Console.WriteLine("Файл удалён!");
+        // поток для записи сжатого файла
+        using (FileStream targetStream = File.Create(arch))
+        {
+          // поток архивации
+          using (GZipStream compressionStream = new GZipStream(targetStream, CompressionMode.Compress))
+          {
+            sourceStream.CopyTo(compressionStream); // копируем байты из одного потока в другой
+            Console.WriteLine("Сжатие файла {0} завершено. Исходный размер: {1}  Сжатый размер: {2}.", file, sourceStream.Length.ToString(), targetStream.Length.ToString());
+          }
+        }
       }
-      Console.WriteLine("Вы хотите удалить zip архив? Нажмите 1 - да, 0 - нет");
+
+      using (FileStream sourceStream = new FileStream(arch, FileMode.OpenOrCreate))
+      {
+        // поток для записи восстановленного файла
+        using (FileStream targetStream = File.Create(target))
+        {
+          // поток разархивации
+          using (GZipStream decompressionStream = new GZipStream(sourceStream, CompressionMode.Decompress))
+          {
+            decompressionStream.CopyTo(targetStream);
+            Console.WriteLine("Восстановлен файл: {0}, размер файла: {1}", target, targetStream.Length.ToString());
+          }
+        }
+      }
+
+      Console.WriteLine("Хотите удалить файлы и архив? (1 - да, 0 - нет)");
       if (Console.ReadLine() == "1")
       {
-        File.Delete(zipFile);
-        Console.WriteLine("Архив удалён!");
+        // Удаление файлов
+        File.Delete(arch);
+        File.Delete(file);
+        File.Delete(target);
+        Console.WriteLine("Файлы удалены");
+      }
+      else
+      {
+        Console.WriteLine("Файлы не удалены");
       }
     }
-    static async Task Main(string[] args)
+  static void  Main(string[] args)
     {
       bool i = true;
       while (i)
@@ -208,7 +228,7 @@ namespace Каримова_ОС_пр1
         {
           case "1": disc(); break;
           case "2": file(); break;
-          case "3": await Json1(); break;
+          case "3": Json(); break;
           case "4": xml(); break;
           case "5": zip(); break;
           case "6": i = false;  break;
